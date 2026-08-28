@@ -82,7 +82,7 @@ h1 em { color: var(--coral); font-weight: inherit; }
 .field-grid { display: grid; gap: 20px; margin-bottom: 24px; }
 .two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 label { display: grid; gap: 7px; color: #353a34; font-size: 14px; font-weight: 750; }
-label small, .subsection p { color: var(--muted); font-size: 13px; font-weight: 400; }
+label small, .subsection p { color: var(--muted); font-size: 16px; font-weight: 400; }
 input, textarea, select { width: 100%; min-height: 46px; border: 1px solid #9d988b; border-radius: 2px; background: #fffefa; color: var(--ink); padding: 10px 12px; }
 textarea { resize: vertical; min-height: 96px; }
 input::placeholder, textarea::placeholder { color: #71766f; }
@@ -132,7 +132,7 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
 .zip-mark b { font-size: 12px; }
 .check-row { display: grid; min-height: 44px; grid-template-columns: 24px 1fr; align-items: center; gap: 11px; font-weight: 650; cursor: pointer; }
 .check-row input { width: 22px; height: 22px; min-height: 22px; margin: 1px 0 0; accent-color: var(--forest); }
-.safety-note { margin: 12px 0 22px 35px; color: var(--muted); font-size: 13px; }
+.safety-note { margin: 12px 0 22px 35px; color: var(--muted); font-size: 16px; }
 .export-button { width: 100%; }
 .plus-tools { margin: 0 0 24px; padding: 20px; background: #edf6f2; border: 1px solid #9dbbb0; }
 .plus-badge { display: inline-block; margin-bottom: 12px; padding: 3px 9px; background: var(--forest); color: white; font-size: 11px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
@@ -173,12 +173,12 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
 .license-card > .button { width: 100%; margin-bottom: 12px; }
 .license-card form { display: grid; gap: 12px; margin: 12px 0; }
 .license-status { min-height: 25px; font-weight: 700; }
-.legal-mini { color: var(--muted); font-size: 12px; }
+.legal-mini { color: var(--muted); font-size: 16px; }
 .legal-links { display: flex; gap: 8px; margin-top: 4px; }
 .legal-links a { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
 
 footer { width: min(1180px, calc(100% - 40px)); min-height: 132px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 36px; }
-footer p { margin: 0; color: var(--muted); font-size: 13px; }
+footer p { margin: 0; color: var(--muted); font-size: 16px; }
 footer nav { display: flex; gap: 18px; }
 footer nav a { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
 

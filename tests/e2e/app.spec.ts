@@ -48,6 +48,36 @@ test('reports clear errors and supports keyboard context entry', async ({ page }
   await expect(page.locator('#context-list')).toContainText('Review this wording.');
 });
 
+test('rejects empty or spoofed PDF files before they can be exported', async ({ page }) => {
+  await page.locator('#pdf-input').setInputFiles({ name: 'empty.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(0) });
+  await expect(page.locator('#status')).toContainText('empty');
+  await expect(page.locator('#pdf-list')).toBeEmpty();
+
+  await page.locator('#pdf-input').setInputFiles({ name: 'spoofed.pdf', mimeType: 'text/plain', buffer: Buffer.from('not a PDF') });
+  await expect(page.locator('#status')).toContainText('not marked as a PDF');
+  await expect(page.locator('#pdf-list')).toBeEmpty();
+
+  await page.locator('#packet-title').fill('Invalid document check');
+  await page.locator('#sensitive-check').check();
+  await page.getByRole('button', { name: 'Download review packet' }).click();
+  await expect(page.locator('#export-error')).toContainText('Add the reviewed PDF');
+
+  await page.locator('#pdf-input').setInputFiles({ name: 'original.pdf', mimeType: '', buffer: Buffer.from('%PDF-1.7\nvalid') });
+  await expect(page.locator('#pdf-list')).toContainText('original.pdf');
+});
+
+test('keeps required explanatory, safety, merchant, and provenance copy at body size', async ({ page }) => {
+  const belowMinimum = await page.evaluate(() => {
+    const selectors = ['.subsection-heading p', '.safety-note', '.legal-mini', 'footer p'];
+    return selectors.flatMap((selector) => [...document.querySelectorAll<HTMLElement>(selector)].map((element) => ({
+      selector,
+      text: element.textContent?.trim(),
+      fontSize: Number.parseFloat(getComputedStyle(element).fontSize),
+    }))).filter(({ fontSize }) => fontSize < 16);
+  });
+  expect(belowMinimum).toEqual([]);
+});
+
 test('has no axe accessibility violations or nested complementary landmarks', async ({ page }) => {
   await page.addScriptTag({ content: axe.source });
   const results = await page.evaluate(async () => (window as typeof window & { axe: typeof axe }).axe.run());

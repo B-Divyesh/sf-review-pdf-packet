@@ -2,6 +2,7 @@ import './style.css';
 import { buildPacketZip, downloadPacket, validHttpUrl } from './export';
 import { formatBytes, getSnapshots, loadDraft, makeId, saveDraft, saveSnapshot } from './model';
 import { initialiseLicense, verifyLicense } from './license';
+import { validatePdfFile } from './pdf-validation';
 import type { ContextItem, PacketState, PacketTextState } from './types';
 
 function byId<T extends HTMLElement>(id: string): T {
@@ -92,11 +93,10 @@ function renderPdf(): void {
   list.append(row);
 }
 
-function isPdf(file: File): boolean { return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'); }
-
-function acceptPdf(file?: File): void {
+async function acceptPdf(file?: File): Promise<void> {
   if (!file) return;
-  if (!isPdf(file)) { announce('That file is not a PDF. Choose a file ending in .pdf.'); return; }
+  const validation = await validatePdfFile(file);
+  if (!validation.valid) { announce(validation.message); return; }
   if (file.size > 50 * 1024 * 1024) { announce('That PDF is larger than 50 MB. Choose a smaller PDF.'); return; }
   state.pdf = file;
   renderPdf(); updatePreview(); announce(`${file.name} is ready.`);
@@ -187,7 +187,7 @@ for (const input of [titleInput, preparedInput, handoffNote]) input.addEventList
   titleInput.removeAttribute('aria-invalid'); exportError.textContent = ''; updatePreview(); persist();
 });
 
-pdfInput.addEventListener('change', () => acceptPdf(pdfInput.files?.[0]));
+pdfInput.addEventListener('change', () => { void acceptPdf(pdfInput.files?.[0]); });
 attachmentInput.addEventListener('change', () => {
   const incoming = [...(attachmentInput.files ?? [])];
   const total = [...state.attachments, ...incoming].reduce((sum, file) => sum + file.size, 0);
@@ -199,7 +199,7 @@ attachmentInput.addEventListener('change', () => {
 const drop = byId('pdf-drop');
 for (const eventName of ['dragenter', 'dragover']) drop.addEventListener(eventName, (event) => { event.preventDefault(); drop.classList.add('dragging'); });
 for (const eventName of ['dragleave', 'drop']) drop.addEventListener(eventName, (event) => { event.preventDefault(); drop.classList.remove('dragging'); });
-drop.addEventListener('drop', (event) => acceptPdf((event as DragEvent).dataTransfer?.files[0]));
+drop.addEventListener('drop', (event) => { void acceptPdf((event as DragEvent).dataTransfer?.files[0]); });
 
 byId('add-context').addEventListener('click', () => {
   const text = contextText.value.trim();

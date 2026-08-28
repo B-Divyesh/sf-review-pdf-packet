@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildPacketZip, escapeHtml, renderPacketHtml, validHttpUrl } from '../../src/export';
 import { crc32 } from '../../src/zip';
+import { validatePdfFile } from '../../src/pdf-validation';
 import type { PacketState } from '../../src/types';
 
 function file(parts: BlobPart[], name: string, type: string): File {
@@ -46,5 +47,14 @@ describe('packet export safety', () => {
 describe('zip checksum', () => {
   it('matches the standard CRC32 vector', () => {
     expect(crc32(new TextEncoder().encode('123456789'))).toBe(0xcbf43926);
+  });
+});
+
+describe('PDF intake validation', () => {
+  it('rejects empty, renamed text, and bad PDF payloads while allowing a valid empty-MIME PDF', async () => {
+    await expect(validatePdfFile(file([], 'empty.pdf', 'application/pdf'))).resolves.toMatchObject({ valid: false, message: expect.stringContaining('empty') });
+    await expect(validatePdfFile(file(['plain text'], 'spoofed.pdf', 'text/plain'))).resolves.toMatchObject({ valid: false, message: expect.stringContaining('not marked') });
+    await expect(validatePdfFile(file(['not a PDF'], 'spoofed.pdf', 'application/pdf'))).resolves.toMatchObject({ valid: false, message: expect.stringContaining('header') });
+    await expect(validatePdfFile(file(['%PDF-1.7\n'], 'portable.pdf', ''))).resolves.toEqual({ valid: true });
   });
 });

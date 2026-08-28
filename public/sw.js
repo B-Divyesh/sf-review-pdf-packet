@@ -1,4 +1,4 @@
-const CACHE = 'review-packet-v4';
+const CACHE = 'review-packet-v5';
 const SHELL = ['/', '/review-packet-diorama.webp', '/favicon.svg', '/legal.css', '/privacy/', '/terms/'];
 self.addEventListener('install', (event) => event.waitUntil((async () => {
   const cache = await caches.open(CACHE);
