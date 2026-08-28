@@ -29,7 +29,13 @@ This repair addresses the two authoritative defects in independent report `.fact
 ### Commits and deployment
 
 - Product repair and regressions: `cbdafb6b5b4df31a141143ef14bc38209334cc45` (`fix: reject invalid PDF intake and restore body copy size`).
-- Deployment and live identity evidence is recorded below after the production deployment completes.
+- Evidence commit: `3417606` (`docs: record verifier repair evidence`); this handoff is updated again with the live deployment evidence below.
+- `/opt/fleet/lib/deploy-static.sh review-pdf-packet /work/repo/dist` deployed Azure Static Web Apps deployment `1840f9e4-a58c-4463-8ba6-c0f9c576c62b` to `https://red-coast-097f1270f.7.azurestaticapps.net`; the custom domain `https://review-pdf-packet.sociobot.in` was Ready and returned HTTPS 200.
+- Live `/`, `/privacy/`, and `/terms/` passed `verify-url.sh` with zero console/page errors and the expected title, `lang`, H1, main landmark, and image/button checks. Root load was 1,927ms; legal-page loads were 723ms and 722ms.
+- The live 390px browser reproduced the repaired behavior: empty PDF is rejected, `text/plain` `spoofed.pdf` is rejected, a header-valid empty-MIME PDF is accepted, every required copy item is 16px, there is no horizontal overflow, no console/page errors, and no initial cross-origin request. The active service-worker cache is `review-packet-v5`.
+- Live Lighthouse mobile: Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 1.6s, CLS 0, TBT 0ms.
+- Byte identity passed for every served build file checked. SHA-256: `index.html` `572be16fbc7d73b3f6badf53607846115f24f249a0323c1ae156816c43470915`; JavaScript `a69099289ef3314fd55e2affbf0da37033206a3036c373b864e6b91403148fc3`; CSS `47b45b8b1d43995ec409af589df54a6f6a8224e7793800aa095f74102d7ef44b`; `sw.js` `ed8d1250202faf22a591e1757e508332063602b63c9a7fcd5a40de0114360401`; plus the hero, favicon, legal CSS, Privacy, and Terms pages matched exactly.
+- Live headers retain HSTS, restrictive CSP, `nosniff`, strict-origin referrer policy, device-permission denial, 30-second HTML revalidation, immutable hashed asset caching, and `no-cache` service-worker updates.
 
 ## Independent verification 2 — FAIL
 
