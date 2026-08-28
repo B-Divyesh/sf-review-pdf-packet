@@ -14,7 +14,7 @@ The app uses an explicit warm-light treatment only. A dark theme would undermine
 - `muted-ink`: `#5D625A`, supporting copy (6.1:1 on sheet).
 - `forest`: `#285943`, structural accent, focus and links (7.4:1 on sheet).
 - `marigold`: `#E8A72C`, physical tabs and highlights; never used alone for text.
-- `coral`: `#C95745`, comment markers and destructive actions (4.8:1 on sheet).
+- `coral`: `#B54533`, comment markers and destructive actions (5.2:1 on sheet).
 - `sky`: `#BFD8D2`, secondary paper layer.
 - `success`: `#286243`; `warning`: `#8A5900`; `danger`: `#A33A2B`.
 
