@@ -17,7 +17,7 @@ Deployment evidence on 2026-08-28:
 
 - `/opt/fleet/lib/deploy-static.sh review-pdf-packet /work/repo/dist` uploaded deployment `b53e21d5-5fa0-405c-b316-c0929dcca6bb` successfully to Azure Static Web Apps at `https://red-coast-097f1270f.7.azurestaticapps.net`.
 - The deployed default hostname passed `verify-url.sh`: HTTP 200, 693 ms load, product title/lang/landmarks/alt and button-label checks passed, and there were zero console/page errors. A production-browser service-worker check then reloaded offline and changed the preview title to `Live offline handoff` with zero errors.
-- The custom CNAME was pointed at that Azure hostname. Azure's first managed-certificate attachment returned its own `unknown error`, and its replacement binding was still in Azure's `Deleting` state at handoff time; the artifact deployment itself is complete and available at the default hostname. Re-run the provided deploy command after Azure finishes releasing that failed binding, then verify `https://review-pdf-packet.sociobot.in` with `verify-url.sh`.
+- The custom CNAME was pointed at that Azure hostname. Azure's first managed-certificate attachment returned its own `unknown error`; the failed binding was removed, recreated with the same CNAME-delegated configuration, and reached `Ready`. The public product URL `https://review-pdf-packet.sociobot.in` then passed `verify-url.sh` (HTTP 200; 748 ms; expected title/lang/landmarks/alt/button labels; zero console/page errors). The live browser offline reload check also passed at that URL.
 
 ## What shipped
 
