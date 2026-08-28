@@ -1,0 +1,11 @@
+{
+  "slug": "review-pdf-packet",
+  "title": "Review Packet",
+  "territory": "utilities",
+  "user": "A professional handing an internally reviewed document to an external reviewer who needs comments, change context, and attachments visible without giving access to the source workspace.",
+  "smallest_useful_product": "Static local packet builder: add a PDF, structured comments/decisions, source links, and attachments; export a self-contained HTML folder and print stylesheet.",
+  "success_measure": "In a usability test, 8 of 10 external reviewers can locate every requested comment, decision, and attachment without signing in or asking the sender for context.",
+  "artifact_class": "static-web",
+  "monetization": "one-time",
+  "constraints": "Do not embed third-party document content without user authority; warn about sensitive data in exported folders; no claims of legal record retention."
+}
