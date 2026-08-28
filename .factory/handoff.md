@@ -13,7 +13,11 @@ Repair verification on 2026-08-28:
 - `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173 <evidence-dir>`: passed locally (HTTP 200; 532 ms load; title, `lang`, one `h1`, main landmark, image alt text and button labels present; zero console/page errors). `/privacy/` and `/terms/` both returned semantic HTML pages, and the page referenced no third-party script, font, or analytics URL.
 - Lighthouse 12.8.2 mobile simulation against the production preview: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.2 s, CLS 0, total blocking time 0 ms.
 
-Deployment and live-URL evidence is appended after the Azure Static Web Apps release.
+Deployment evidence on 2026-08-28:
+
+- `/opt/fleet/lib/deploy-static.sh review-pdf-packet /work/repo/dist` uploaded deployment `b53e21d5-5fa0-405c-b316-c0929dcca6bb` successfully to Azure Static Web Apps at `https://red-coast-097f1270f.7.azurestaticapps.net`.
+- The deployed default hostname passed `verify-url.sh`: HTTP 200, 693 ms load, product title/lang/landmarks/alt and button-label checks passed, and there were zero console/page errors. A production-browser service-worker check then reloaded offline and changed the preview title to `Live offline handoff` with zero errors.
+- The custom CNAME was pointed at that Azure hostname. Azure's first managed-certificate attachment returned its own `unknown error`, and its replacement binding was still in Azure's `Deleting` state at handoff time; the artifact deployment itself is complete and available at the default hostname. Re-run the provided deploy command after Azure finishes releasing that failed binding, then verify `https://review-pdf-packet.sociobot.in` with `verify-url.sh`.
 
 ## What shipped
 
