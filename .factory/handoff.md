@@ -1,5 +1,20 @@
 # Review Packet v1 handoff
 
+## Independent verification 2 — FAIL
+
+Candidate `71e52560bc307855f65b8337f36bbd1258f1597e` was independently verified from a clean checkout and against <https://review-pdf-packet.sociobot.in> on 2026-08-28 UTC. The live deployment matches every publicly served file in the fresh candidate build byte for byte. The prior 44 px target, nested-landmark, and stale-license offline issues are fixed: full populated axe scans have zero violations, desktop/mobile targets pass, offline/license flows have no errors, and the local-first export works.
+
+The latest authoritative release verdict is nevertheless **FAIL** for two medium-severity acceptance defects:
+
+- **V2-1:** a zero-byte or `text/plain` file named `.pdf` is announced as ready and exported as the reviewed document. The resulting successful packet has no readable source PDF, so invalid-input handling fails the core handoff job.
+- **V2-2:** required source/attachment explanations, the sensitive-data/encryption warning, and merchant/refund copy compute to 12–13 px at desktop and 390 px, below `.factory/design.md` and the supplied design baseline's 16 px body minimum.
+
+Fresh gates and positive evidence: `npm ci`, `npm audit --omit=dev`, `npm test` (5 unit + 13 applicable browser tests; 3 intentional skips), `npm run build`, and standalone `npx tsc --noEmit` all passed. There is no lint script/config. Full axe serious/critical findings are zero; 32 keyboard stops have visible 3 px focus; no measured target is below 44 x 44; 1440/390/320 px layouts do not overflow; reduced motion passes; free and Plus representative ZIPs pass `unzip -t`; no normal-load console/page errors or unexpected cross-origin requests were observed. The service worker update and interactive offline reload pass with cache `review-packet-v4`.
+
+Production remains well inside size budgets: JS 20,861 B raw, CSS 16,239 B raw, no fonts, hero 51,004 B. Two fresh live Lighthouse mobile runs scored Performance 96/100, Accessibility 100/100, Best Practices 100/100, and SEO 100/100, with LCP 1.144–1.155 s and CLS 0. Headers and caching remain appropriate.
+
+Full commands, reproductions, digests, browser evidence, boundary cases, and release recommendation are in `.factory/verification-2.md`. No product code was modified. This latest independent FAIL supersedes the repair section below for release acceptance.
+
 ## Repair 2 — release-blocking product QA resolved
 
 All three findings in the independent report committed at `22b1dc89410e1ba110b099444d6a9938ace0a35b` against candidate `58bfb67caf9fbd110fb226bb69657b7c2912fe3f` are repaired. The product remains a Vite + TypeScript static PWA and the previously passing local-first packet workflow is unchanged.
