@@ -1,5 +1,36 @@
 # Review Packet v1 handoff
 
+## Repair 3 — release-blocking verifier findings resolved
+
+This repair addresses the two authoritative defects in independent report `.factory/verification-2.md`, which tested candidate `71e52560bc307855f65b8337f36bbd1258f1597e`. The product remains a Vite + TypeScript static PWA deployed from `dist/`; the local-first packet workflow, free export, and original paper-cut identity are unchanged.
+
+### Root causes and repairs
+
+- **V2-1 — invalid PDF accepted and exported:** `src/main.ts` previously accepted a source document when either the MIME type was `application/pdf` **or** its filename ended in `.pdf`. A zero-byte file or renamed text file therefore appeared ready and could become the reviewed document inside a successful ZIP. New `validatePdfFile` validates the `.pdf` name, non-zero size, known MIME type (when present), and a `%PDF-` header in the first KiB before mutating packet state. A valid PDF with empty MIME metadata remains accepted for browser/platform compatibility. The invalid file keeps any previously selected valid PDF intact because validation occurs before state mutation.
+- **V2-2 — essential prose below the documented body minimum:** source-link and attachment explanations, the exported-folder warning, Plus merchant/refund copy, and footer provenance/privacy copy now compute to 16px at desktop and 390px. This restores the visual thesis's “Body is at least 16px” contract without changing the deliberately smaller editorial labels.
+- **Offline update:** the service-worker cache is now `review-packet-v5`, so clients with `review-packet-v4` install the repaired shell and its new hashed assets.
+
+### Exact regression coverage
+
+- Unit coverage calls the PDF validator with an empty `application/pdf`, a `text/plain` payload named `spoofed.pdf`, an `application/pdf` payload without a PDF header, and a header-valid PDF with an empty MIME type.
+- Browser coverage attempts the empty and spoofed files through the real picker, checks that neither reaches the file list or export, then checks the empty-MIME valid PDF path. It also computes the font size of the two explanation paragraphs, safety note, merchant/refund copy, and footer provenance copy and fails below 16px in both Playwright desktop and 390px mobile projects.
+- Existing full-browser coverage continues to exercise a valid export/download, keyboard context entry, axe, 44px targets, 390px overflow, reduced/offline shell behavior, and stale cached-license behavior. The service worker cache was directly inspected after control and contains only `review-packet-v5`.
+
+### Clean verification — 2026-08-28 UTC
+
+- `npm ci`: passed (59 packages installed, 60 audited); `npm audit --omit=dev`: zero vulnerabilities.
+- `npm test`: passed — 6 Vitest tests and 18 Playwright tests across desktop Chromium and 390px mobile; 2 project-specific cross-project duplicates skipped. The added V2-1 and V2-2 cases pass in both browser projects.
+- `npm run build` and standalone `npx tsc --noEmit`: passed. `dist/index.html` is at the required root. There is no lint script/configuration; package/consumer installation is not applicable to this static web artifact.
+- `git diff --check`: passed. Built assets: JavaScript 21,379 B raw, CSS 16,239 B raw, no fonts, and hero WebP 51,004 B—within all stated budgets.
+- `/opt/fleet/lib/verify-url.sh` passed against local root, `/privacy/`, and `/terms/`: HTTP 200; title, `lang`, one H1, main landmark, image alternatives and button labels present; zero console/page errors. Root load was 525ms; legal-page loads were 519ms and 521ms.
+- Playwright request inspection at 390px found only `http://127.0.0.1:4173`, zero console/page errors, no horizontal overflow, and every required body-copy selector at 16px. Full axe is included in `npm test` with zero violations. The pre-existing browser checks cover keyboard, focus/target size, reduced-motion, offline interaction, and stale-license offline reconciliation.
+- Local Lighthouse mobile (`lighthouse` 12.8.2, Playwright Chromium headless shell): Performance 99, Accessibility 100, Best Practices 100, SEO 100; LCP 1.6s, CLS 0, TBT 0ms.
+
+### Commits and deployment
+
+- Product repair and regressions: `cbdafb6b5b4df31a141143ef14bc38209334cc45` (`fix: reject invalid PDF intake and restore body copy size`).
+- Deployment and live identity evidence is recorded below after the production deployment completes.
+
 ## Independent verification 2 — FAIL
 
 Candidate `71e52560bc307855f65b8337f36bbd1258f1597e` was independently verified from a clean checkout and against <https://review-pdf-packet.sociobot.in> on 2026-08-28 UTC. The live deployment matches every publicly served file in the fresh candidate build byte for byte. The prior 44 px target, nested-landmark, and stale-license offline issues are fixed: full populated axe scans have zero violations, desktop/mobile targets pass, offline/license flows have no errors, and the local-first export works.
