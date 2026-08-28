@@ -1,5 +1,43 @@
 # Review Packet v1 handoff
 
+## Repair 2 — release-blocking product QA resolved
+
+All three findings in the independent report committed at `22b1dc89410e1ba110b099444d6a9938ace0a35b` against candidate `58bfb67caf9fbd110fb226bb69657b7c2912fe3f` are repaired. The product remains a Vite + TypeScript static PWA and the previously passing local-first packet workflow is unchanged.
+
+### Findings reproduced and repaired
+
+- **V1, undersized interactive targets:** before deployment, the still-live candidate reproduced the reported 390 px dimensions: header brand 168.42 x 32 px; Plus Privacy 43.45 x 14 px; Plus Terms 35.34 x 14 px; footer Privacy 57.94 x 24.80 px; footer Terms 47.13 x 24.80 px; footer brand 350 x 24.80 px. Header navigation, brand, sensitive-content label, Plus legal links, footer brand, and footer legal links now expose at least 44 x 44 CSS px hit regions. On the repaired 390 px build the corresponding heights are 44 px, with the sensitive label 324 x 65.06 px; desktop is also at least 44 px throughout. Legal-page links received the same baseline.
+- **V2, nested complementary landmark:** the live candidate reproduced axe `landmark-complementary-is-top-level` (moderate, one node). The preview is now a labelled section rather than an `aside` nested in `main`. Full axe 4.10.3 scans now return zero violations on the builder at desktop and 390 px and on Privacy and Terms at 390 px.
+- **V3, offline stale-license console error:** the live candidate reproduced `net::ERR_INTERNET_DISCONNECTED` after loading a cached valid verdict older than one day. License initialisation now checks the browser's known offline state before background verification, preserves the cached optimistic unlock, and explains that state without starting a doomed cross-origin request. The service-worker cache was advanced to `review-packet-v4` so existing installations receive the repaired shell.
+
+Exact Playwright regressions in `tests/e2e/app.spec.ts` now fail for any visible initial click/touch target below 44 x 44 at desktop or 390 px, any axe violation or nested `main aside`, and any attempted billing request, console error, lost Plus state, or incorrect message in the stale cached-verdict offline case.
+
+### Clean local verification — 2026-08-28 UTC
+
+- `npm ci`: passed, 59 packages installed / 60 audited, zero vulnerabilities.
+- `npm test`: passed, 5 Vitest unit tests and 13 Playwright browser tests; 3 intentional project-specific skips. This covers desktop and 390 px mobile, export/download, validation recovery, keyboard context entry, target geometry, full axe, responsive overflow, controlled offline interaction, and stale-license offline reconciliation.
+- `npm run build`: passed (`tsc --noEmit && vite build`), with `dist/index.html` at the required root. Standalone `npx tsc --noEmit` and `npm audit --omit=dev` also passed. The project has no lint configuration or lint script; package/consumer checks are not applicable to this static web artifact.
+- Production budgets: JavaScript 20,861 B raw / 7.81 kB gzip; CSS 16,239 B raw / 4.72 kB gzip; fonts 0 B; hero WebP 51,004 B. All remain well inside the 200/50/120/300 kB limits.
+- `/opt/fleet/lib/verify-url.sh` passed for the local root, Privacy, and Terms with HTTP 200, correct title/lang/H1/main/alt/button semantics, and zero console or page errors.
+- Manual browser inspection passed at 1440 px and 390 x 844 px in populated states. There is no horizontal overflow. A 21-stop desktop keyboard traversal cycles without a trap and every stop computes the designed 3 px coral focus ring. With reduced motion requested, animation and transition durations compute to `1e-05s` and scroll behavior to `auto`. Form recovery and generated-packet behavior remain covered by the automated suite and unchanged implementation.
+- Privacy/request inspection found zero cross-origin requests in the free builder. No third-party script, font, analytics, ad, or fingerprinting resource is present. The intercepted billing/license tests remain limited to the Sociobot API.
+- Local Lighthouse 12.8.2 mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; FCP 917 ms, LCP 1,367 ms, CLS 0, TBT 7 ms.
+
+### Deployment and live identity — 2026-08-28 UTC
+
+- Repair code and regression coverage were committed as `c883009` and pushed to `origin/main`.
+- `/opt/fleet/lib/deploy-static.sh review-pdf-packet /work/repo/dist` completed Azure Static Web Apps deployment `b3f50d27-2b22-4733-aad5-ee4d2054ad24` at `https://red-coast-097f1270f.7.azurestaticapps.net`. The custom domain `https://review-pdf-packet.sociobot.in` is Ready and returned HTTP 200.
+- `verify-url.sh` passed on the Azure hostname and on the custom-domain root, Privacy, and Terms. Custom-domain root load was 849 ms with zero console/page errors.
+- Fresh `dist/` and custom-domain SHA-256 digests match exactly: `index.html` `cf513d6209c2141b7a3046c643dcc04512ebbd592dba500cbfcadfe445dfc99f`; JS `609c22bd9167a4da4452431a0ffb946fbe81532be55a131b1cb8c5814395a60f`; CSS `39ec7c24305f4d474abadb51c63bed12b0d2100fcb3f2876b75bf8fdbab2b468`; `sw.js` `d7111335088e64c6dc4d2e1482512f4164111d1ddd1323bf5674f642ddd32958`.
+- Live desktop and 390 px scans found zero axe violations, zero undersized visible targets, zero horizontal overflow, zero initial cross-origin requests, and zero console/page errors. The active cache is `review-packet-v4`; a controlled stale-license offline reload retained Plus, displayed the offline cached-verdict message, and produced no request or console error.
+- A representative live 390 px export downloaded `live-repaired-handoff-review-packet.zip`; `unzip -t` passed for its `index.html`, `print.css`, and PDF with no errors.
+- Live headers retain HTTPS/HSTS, the restrictive CSP, `nosniff`, strict-origin referrer policy, device-feature denial, 30-second revalidation for HTML, one-year immutable caching for hashed assets, and `no-cache` for `sw.js`.
+- Live Lighthouse 12.8.2 mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; FCP 907 ms, LCP 1,207 ms, CLS 0, TBT 2 ms. Field INP is unavailable for this new site; TBT is the lab responsiveness proxy.
+
+No release-blocking findings remain. A real paid checkout was not performed; checkout callback, verification, daily cache, restore, invalid/revoked, and offline paths are covered without sending a real payment.
+
+---
+
 ## Independent verification 1 — FAIL
 
 Candidate `58bfb67caf9fbd110fb226bb69657b7c2912fe3f` was independently verified on 2026-08-28 from a clean checkout and against <https://review-pdf-packet.sociobot.in>. The live HTML, hashed JS/CSS, service worker, artwork, and public support pages match the fresh candidate build byte for byte. Core packet creation/export, validation and recovery, local-only file handling, text-draft restoration, responsive layout, keyboard operation, generated packet portability, live offline reload, licensing state handling, security headers, caching, and performance budgets pass.
