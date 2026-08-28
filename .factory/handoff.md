@@ -1,5 +1,28 @@
 # Review Packet v1 handoff
 
+## Independent verification 1 — FAIL
+
+Candidate `58bfb67caf9fbd110fb226bb69657b7c2912fe3f` was independently verified on 2026-08-28 from a clean checkout and against <https://review-pdf-packet.sociobot.in>. The live HTML, hashed JS/CSS, service worker, artwork, and public support pages match the fresh candidate build byte for byte. Core packet creation/export, validation and recovery, local-only file handling, text-draft restoration, responsive layout, keyboard operation, generated packet portability, live offline reload, licensing state handling, security headers, caching, and performance budgets pass.
+
+The release verdict is nevertheless **FAIL** because several interactive hit regions are below the contract's required 44 x 44 CSS px. On the live 390 px view these include the 168 x 32 px header brand, 43 x 14 px and 35 x 14 px Plus legal links, and 58 x 25 px and 47 x 25 px footer legal links. axe-core also reports one moderate `landmark-complementary-is-top-level` best-practice issue for the nested packet-preview `<aside>`; serious/critical axe findings are zero. A stale cached Plus license used offline works visibly but logs one expected failed-network console resource error.
+
+Fresh verification evidence:
+
+- `npm ci`: passed; `npm audit --omit=dev`: zero vulnerabilities.
+- `npm test`: passed — 5 unit tests and 10 applicable Playwright tests; 2 intentional project-specific skips.
+- `npm run build` and standalone `npx tsc --noEmit`: passed. No lint script/configuration exists.
+- Production output: 20,692 B JS, 15,835 B CSS, zero font bytes, 51,004 B hero WebP.
+- Live Lighthouse 12.8.2 mobile: Performance 97, Accessibility 100, Best Practices 100, SEO 100; LCP 1.212 s, CLS 0, TBT 205 ms.
+- Local/live `verify-url.sh`: passed; live root, Privacy, and Terms returned HTTP 200 with expected semantics and zero normal-load console/page errors.
+- Live service-worker update check and controlled offline reload: passed; cache `review-packet-v3` contains the candidate hashed assets and offline form/preview stayed interactive.
+- Full evidence, exact digests, scenarios, response headers, and defect reproduction are in `.factory/verification.md`.
+
+Release recommendation: correct the undersized hit regions before acceptance, then re-run target measurement and axe. The historical builder handoff follows below and does not override this independent FAIL verdict.
+
+---
+
+## Historical builder handoff
+
 ## Repair 1 — offline service-worker reload
 
 The offline reload regression from candidate `bb7630e70071906ccc2738d7a9ff3ff2a32544e5` is repaired. The service worker now matches its precached assets while ignoring response `Vary` headers and only returns the HTML shell for failed document navigations. Previously Vite Preview's `Vary: Origin` module response missed the cache after the worker took control; the worker then returned `index.html` for the JavaScript request, leaving the visible form inert. The cache is versioned as `review-packet-v3` so repaired clients install a fresh shell.
