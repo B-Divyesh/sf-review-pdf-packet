@@ -50,6 +50,13 @@ export async function initialiseLicense(update: LicenseUpdate): Promise<boolean>
 
   const optimistic = hasOptimisticUnlock();
   if (optimistic) update(true, 'Plus is unlocked.');
+  // Browsers report a failed cross-origin fetch as a console resource error even
+  // when the rejection is handled. Preserve the cached unlock without starting
+  // a request that cannot succeed while the device is known to be offline.
+  if (!navigator.onLine) {
+    update(optimistic, optimistic ? 'Plus is unlocked offline using your last verified license.' : 'Could not verify the license while offline. Reconnect and try again.');
+    return optimistic;
+  }
   try {
     const result = await verifyLicense(token, Boolean(returned));
     const message = result.valid ? 'Plus is unlocked on this device.' : 'This license is no longer active. You can buy a new license below.';

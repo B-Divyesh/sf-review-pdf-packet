@@ -30,11 +30,11 @@ button { color: inherit; }
 [hidden] { display: none !important; }
 
 .site-header { width: min(1180px, calc(100% - 40px)); min-height: 76px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid rgba(32,37,31,.16); }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 760; text-decoration: none; letter-spacing: -.02em; }
+.brand { display: inline-flex; min-height: 44px; align-items: center; gap: 10px; color: var(--ink); font-weight: 760; text-decoration: none; letter-spacing: -.02em; }
 .brand svg { width: 32px; height: 32px; fill: var(--sheet); stroke: var(--forest); stroke-width: 2.5; }
 .site-header nav { display: flex; align-items: center; gap: 24px; }
-.site-header nav a, .text-button { color: var(--ink); font-weight: 650; text-decoration: none; }
-.text-button { border: 0; padding: 0 2px; background: transparent; cursor: pointer; }
+.site-header nav a, .text-button { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; color: var(--ink); font-weight: 650; text-decoration: none; }
+.text-button { border: 0; padding: 0 8px; background: transparent; cursor: pointer; }
 
 .hero { width: min(1180px, calc(100% - 40px)); min-height: 640px; margin: 0 auto; display: grid; grid-template-columns: .92fr 1.08fr; align-items: center; gap: 56px; padding: 72px 0 88px; }
 .eyebrow { margin: 0 0 14px; color: var(--forest); font-size: 13px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
@@ -130,7 +130,7 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
 .zip-mark { position: relative; display: grid; width: 64px; height: 74px; place-items: end center; padding-bottom: 9px; background: var(--sky); clip-path: polygon(0 0, 75% 0, 100% 22%, 100% 100%, 0 100%); }
 .zip-mark i { position: absolute; left: 15px; top: 0; width: 10px; height: 42px; background: repeating-linear-gradient(var(--forest) 0 4px, transparent 4px 7px); }
 .zip-mark b { font-size: 12px; }
-.check-row { display: grid; grid-template-columns: 24px 1fr; align-items: start; gap: 11px; font-weight: 650; }
+.check-row { display: grid; min-height: 44px; grid-template-columns: 24px 1fr; align-items: center; gap: 11px; font-weight: 650; cursor: pointer; }
 .check-row input { width: 22px; height: 22px; min-height: 22px; margin: 1px 0 0; accent-color: var(--forest); }
 .safety-note { margin: 12px 0 22px 35px; color: var(--muted); font-size: 13px; }
 .export-button { width: 100%; }
@@ -174,10 +174,13 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid va
 .license-card form { display: grid; gap: 12px; margin: 12px 0; }
 .license-status { min-height: 25px; font-weight: 700; }
 .legal-mini { color: var(--muted); font-size: 12px; }
+.legal-links { display: flex; gap: 8px; margin-top: 4px; }
+.legal-links a { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
 
 footer { width: min(1180px, calc(100% - 40px)); min-height: 132px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 36px; }
 footer p { margin: 0; color: var(--muted); font-size: 13px; }
 footer nav { display: flex; gap: 18px; }
+footer nav a { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; justify-content: center; }
 
 @keyframes slip-in { from { opacity: 0; transform: translateY(-8px); } }
 

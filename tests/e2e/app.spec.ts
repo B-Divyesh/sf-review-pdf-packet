@@ -48,12 +48,34 @@ test('reports clear errors and supports keyboard context entry', async ({ page }
   await expect(page.locator('#context-list')).toContainText('Review this wording.');
 });
 
-test('has no serious accessibility violations', async ({ page }) => {
+test('has no axe accessibility violations or nested complementary landmarks', async ({ page }) => {
   await page.addScriptTag({ content: axe.source });
   const results = await page.evaluate(async () => (window as typeof window & { axe: typeof axe }).axe.run());
-  expect(results.violations.filter((issue) => ['serious', 'critical'].includes(issue.impact ?? ''))).toEqual([]);
+  expect(results.violations).toEqual([]);
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('main')).toHaveCount(1);
+  await expect(page.locator('main aside')).toHaveCount(0);
+});
+
+test('keeps every visible click or touch target at least 44 by 44 CSS pixels', async ({ page }) => {
+  const undersized = await page.evaluate(() => {
+    const selectors = [
+      'a[href]', 'button', 'input:not([type="file"]):not([type="checkbox"])',
+      'textarea', 'select', 'label[for]', 'label.check-row', 'label.file-button',
+    ];
+    return [...document.querySelectorAll<HTMLElement>(selectors.join(','))]
+      .filter((element) => {
+        const style = getComputedStyle(element);
+        const rect = element.getBoundingClientRect();
+        return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
+      })
+      .map((element) => {
+        const rect = element.getBoundingClientRect();
+        return { target: element.getAttribute('aria-label') ?? element.textContent?.trim().replace(/\s+/g, ' ').slice(0, 60) ?? element.tagName, width: rect.width, height: rect.height };
+      })
+      .filter(({ width, height }) => width < 44 || height < 44);
+  });
+  expect(undersized).toEqual([]);
 });
 
 test('fits a 390px mobile viewport without horizontal scrolling', async ({ page }, testInfo) => {
@@ -82,5 +104,28 @@ test('reopens offline after the first visit', async ({ page, context }, testInfo
   await page.locator('#context-text').fill('Confirm the publishing date.');
   await page.getByRole('button', { name: 'Add to packet' }).click();
   await expect(page.locator('#preview-context')).toHaveText('1 item');
+  expect(errors).toEqual([]);
+});
+
+test('uses a stale valid Plus verdict offline without attempting a network request', async ({ page, context }, testInfo) => {
+  test.skip(testInfo.project.name.includes('mobile'));
+  const errors: string[] = [];
+  const failedRequests: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
+  page.on('requestfailed', (request) => {
+    if (request.url().includes('/products/review-pdf-packet/verify')) failedRequests.push(request.url());
+  });
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+  await page.evaluate(() => {
+    localStorage.setItem('sb_license:review-pdf-packet', 'cached-test-license');
+    localStorage.setItem('sb_license_verdict:review-pdf-packet', JSON.stringify({ valid: true, checkedAt: Date.now() - 86_400_001, reason: 'ok' }));
+  });
+  await context.setOffline(true);
+  await page.reload();
+  await expect(page.locator('#license-status')).toHaveText('Plus is unlocked offline using your last verified license.');
+  await expect(page.locator('#plus-tools')).toBeVisible();
+  expect(failedRequests).toEqual([]);
   expect(errors).toEqual([]);
 });
