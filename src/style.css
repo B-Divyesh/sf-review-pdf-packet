@@ -89,6 +89,7 @@ input::placeholder, textarea::placeholder { color: #71766f; }
 input[aria-invalid="true"], textarea[aria-invalid="true"] { border: 2px solid var(--danger); }
 .drop-zone { min-height: 118px; grid-template-columns: 58px 1fr; align-items: center; border: 2px dashed #7e8d83; padding: 20px; background: #f5faf7; cursor: pointer; }
 .drop-zone:hover, .drop-zone.dragging { background: #e9f3ee; border-color: var(--forest); }
+.drop-zone:focus-within, .file-button:focus-within { outline: 3px solid var(--coral); outline-offset: 3px; }
 .drop-zone input, .file-button input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .drop-icon { display: grid; width: 54px; height: 64px; place-items: center; background: var(--coral); color: white; clip-path: polygon(0 0, 76% 0, 100% 20%, 100% 100%, 0 100%); font-size: 12px; font-weight: 850; }
 .drop-zone span { display: grid; }

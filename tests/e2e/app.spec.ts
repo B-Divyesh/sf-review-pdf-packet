@@ -12,6 +12,8 @@ test('loads without console or page errors', async ({ page }) => {
   await page.reload();
   await page.waitForLoadState('networkidle');
   expect(errors).toEqual([]);
+  await page.evaluate(() => window.dispatchEvent(new Event('offline')));
+  await expect(page.locator('#offline-banner')).toBeVisible();
 });
 
 test('builds and downloads a complete packet', async ({ page }) => {
@@ -59,4 +61,16 @@ test('fits a 390px mobile viewport without horizontal scrolling', async ({ page 
   const widths = await page.evaluate(() => ({ scroll: document.documentElement.scrollWidth, client: document.documentElement.clientWidth }));
   expect(widths.scroll).toBeLessThanOrEqual(widths.client + 1);
   await expect(page.getByRole('link', { name: 'Build your packet' })).toBeVisible();
+});
+
+test('reopens offline after the first visit', async ({ page, context }, testInfo) => {
+  test.skip(testInfo.project.name.includes('mobile'));
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+  await page.waitForTimeout(300);
+  await context.setOffline(true);
+  await page.reload();
+  await expect(page.locator('h1')).toContainText('Send the context.');
+  await page.locator('#packet-title').fill('Offline handoff');
+  await expect(page.locator('#preview-title')).toHaveText('Offline handoff');
 });

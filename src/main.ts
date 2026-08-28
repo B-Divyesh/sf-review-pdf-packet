@@ -2,7 +2,7 @@ import './style.css';
 import { buildPacketZip, downloadPacket, validHttpUrl } from './export';
 import { formatBytes, getSnapshots, loadDraft, makeId, saveDraft, saveSnapshot } from './model';
 import { initialiseLicense, verifyLicense } from './license';
-import type { ContextItem, PacketState, PacketTextState, SourceLink } from './types';
+import type { ContextItem, PacketState, PacketTextState } from './types';
 
 function byId<T extends HTMLElement>(id: string): T {
   const element = document.getElementById(id);
@@ -29,6 +29,7 @@ const state: PacketState = { ...restored, pdf: null, attachments: [] };
 let plusUnlocked = false;
 let removed: { type: 'context'; item: ContextItem; index: number } | { type: 'attachment'; item: File; index: number } | { type: 'pdf'; item: File } | null = null;
 let persistTimer = 0;
+let toastTimer = 0;
 
 function textState(): PacketTextState {
   return { title: state.title, preparedBy: state.preparedBy, handoffNote: state.handoffNote, context: state.context, links: state.links };
@@ -64,9 +65,10 @@ function makeRemoveButton(label: string, action: () => void): HTMLButtonElement 
 }
 
 function showUndo(message: string): void {
+  window.clearTimeout(toastTimer);
   setText('toast-text', message);
   byId('toast').hidden = false;
-  window.setTimeout(() => { byId('toast').hidden = true; removed = null; }, 6000);
+  toastTimer = window.setTimeout(() => { byId('toast').hidden = true; removed = null; }, 6000);
 }
 
 function renderPdf(): void {
@@ -231,7 +233,8 @@ form.addEventListener('submit', async (event) => {
   if (!byId<HTMLInputElement>('sensitive-check').checked) { exportError.textContent = 'Confirm that you checked the recipients and sensitive contents.'; byId<HTMLInputElement>('sensitive-check').focus(); return; }
   const button = byId<HTMLButtonElement>('export-button'); button.disabled = true; button.textContent = 'Assembling packet…'; announce('Assembling your offline packet.');
   try {
-    const blob = await buildPacketZip(state); downloadPacket(blob, state.title); announce('Packet downloaded. Open index.html inside the unzipped folder to review it.');
+    const exportState = { ...state, handoffNote: plusUnlocked ? state.handoffNote : '' };
+    const blob = await buildPacketZip(exportState); downloadPacket(blob, state.title); announce('Packet downloaded. Open index.html inside the unzipped folder to review it.');
   } catch { exportError.textContent = 'The packet could not be built. Your work is safe—try again or remove very large attachments.'; }
   finally { button.disabled = false; button.textContent = 'Download review packet'; }
 });
@@ -258,7 +261,9 @@ byId('snapshot-select').addEventListener('change', () => {
 });
 
 function updateOnlineState(): void { offlineBanner.hidden = navigator.onLine; }
-window.addEventListener('online', updateOnlineState); window.addEventListener('offline', updateOnlineState); updateOnlineState();
+window.addEventListener('online', () => { offlineBanner.hidden = true; });
+window.addEventListener('offline', () => { offlineBanner.hidden = false; });
+updateOnlineState();
 
 renderPdf(); renderContext(); renderAttachments(); renderLinks(); renderSnapshots(); updatePreview();
 void initialiseLicense(setPlus);

@@ -39,7 +39,8 @@ const DRAFT_KEY = 'review-packet:draft:v1';
 const SNAPSHOT_KEY = 'review-packet:snapshots:v1';
 
 export function saveDraft(state: PacketTextState): void {
-  localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
+  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); }
+  catch { /* The builder remains usable when storage is blocked or full. */ }
 }
 
 export function loadDraft(): PacketTextState {
