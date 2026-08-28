@@ -65,12 +65,22 @@ test('fits a 390px mobile viewport without horizontal scrolling', async ({ page 
 
 test('reopens offline after the first visit', async ({ page, context }, testInfo) => {
   test.skip(testInfo.project.name.includes('mobile'));
+  const errors: string[] = [];
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('pageerror', (error) => errors.push(error.message));
   await page.evaluate(() => navigator.serviceWorker.ready);
   await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
   await page.waitForTimeout(300);
   await context.setOffline(true);
   await page.reload();
   await expect(page.locator('h1')).toContainText('Send the context.');
+  await expect(page.locator('#packet-title')).toBeEditable();
   await page.locator('#packet-title').fill('Offline handoff');
   await expect(page.locator('#preview-title')).toHaveText('Offline handoff');
+  await page.locator('#prepared-by').fill('Morgan Lee');
+  await expect(page.locator('#preview-byline')).toHaveText('Prepared by Morgan Lee');
+  await page.locator('#context-text').fill('Confirm the publishing date.');
+  await page.getByRole('button', { name: 'Add to packet' }).click();
+  await expect(page.locator('#preview-context')).toHaveText('1 item');
+  expect(errors).toEqual([]);
 });

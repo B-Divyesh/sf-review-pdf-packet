@@ -1,5 +1,20 @@
 # Review Packet v1 handoff
 
+## Repair 1 — offline service-worker reload
+
+The offline reload regression from candidate `bb7630e70071906ccc2738d7a9ff3ff2a32544e5` is repaired. The service worker now matches its precached assets while ignoring response `Vary` headers and only returns the HTML shell for failed document navigations. Previously Vite Preview's `Vary: Origin` module response missed the cache after the worker took control; the worker then returned `index.html` for the JavaScript request, leaving the visible form inert. The cache is versioned as `review-packet-v3` so repaired clients install a fresh shell.
+
+The focused Playwright regression takes the browser offline only after `navigator.serviceWorker.controller` is present, reloads, and verifies that title, preparer, and context controls update the preview with no console or page errors.
+
+Repair verification on 2026-08-28:
+
+- `npm test`: passed — 5 unit tests plus 10 applicable Playwright checks (2 intentional per-project skips), including desktop/mobile, keyboard context entry, axe serious/critical findings, download integration, offline controlled reload, and console/page-error checks.
+- `npm run build`: passed; `dist/index.html` is at the required root. Production JavaScript is 20,692 bytes raw / 7,781 bytes gzip; CSS is 15,835 bytes raw / 4,667 bytes gzip; the hero WebP is 51,004 bytes.
+- `/opt/fleet/lib/verify-url.sh http://127.0.0.1:4173 <evidence-dir>`: passed locally (HTTP 200; 532 ms load; title, `lang`, one `h1`, main landmark, image alt text and button labels present; zero console/page errors). `/privacy/` and `/terms/` both returned semantic HTML pages, and the page referenced no third-party script, font, or analytics URL.
+- Lighthouse 12.8.2 mobile simulation against the production preview: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.2 s, CLS 0, total blocking time 0 ms.
+
+Deployment and live-URL evidence is appended after the Azure Static Web Apps release.
+
 ## What shipped
 
 - A responsive, local-first Vite + TypeScript packet builder for one reviewed PDF, structured comments and decisions, source links, and supporting attachments.
