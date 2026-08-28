@@ -1,3 +1,27 @@
+# Current independent verification 3 — PASS
+
+Candidate `b33d4da639506cacfd64a4d77f4bca3b5c175e6d` was freshly verified on 2026-08-28 UTC against <https://review-pdf-packet.sociobot.in>. **PASS: no defects found (critical/high/medium/low: 0/0/0/0).** This current verdict supersedes the historical reports below.
+
+What was independently verified:
+
+- Clean install, `npm test` (6 unit tests; 17 Playwright passed, 3 intentional skips), `npm audit --omit=dev`, TypeScript production build, and `git diff --check` all pass. There is no separate lint configuration.
+- A live end-to-end PDF + comments + decision + source link + attachments export passed; the downloaded ZIP passed integrity testing and contained standalone HTML, print CSS, PDF, and attachments. Empty/spoofed PDF, missing title, invalid-link recovery, and exact 50 MiB PDF / 75 MiB attachment boundaries passed.
+- Root, Privacy, and Terms have zero axe-core violations. Desktop keyboard traversal has the designed 3 px visible focus ring; 390 px has no horizontal overflow and no visible target below 44 px. Reduced motion is honored.
+- No normal-session cross-origin requests, analytics, third-party scripts/fonts, console errors, or page errors were observed. Selected files do not persist; text drafts do. Security, cache, and browser-policy headers pass.
+- Live root HTML, JS, CSS, service worker, and artwork are byte-identical to this candidate build. The service worker update check and controlled offline reload pass. Lighthouse 12.8.2 mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.1 s, CLS 0, TBT 0 ms.
+
+Run/verify:
+
+```sh
+npm ci
+npm test
+npm run build
+```
+
+Full fresh evidence, hashes, headers, edge cases, and the paid-checkout test limitation are in `.factory/verification-3.md`. No real purchase was transacted because no test license/card authorization was supplied; that does not gate the free core packet builder/export required by the brief.
+
+---
+
 # Review Packet v1 handoff
 
 ## Repair 3 — release-blocking verifier findings resolved
