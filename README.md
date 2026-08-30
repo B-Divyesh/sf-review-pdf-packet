@@ -1,17 +1,17 @@
 # Review Packet
 
-Review Packet turns a reviewed PDF, structured comments and decisions, source links, and supporting files into one portable offline folder. It is for professionals who need to hand work to an external reviewer without granting access to the source workspace or rebuilding the context in email.
+Review Packet packages a PDF with review context and supporting files. It is for people sending a reviewed document to an external reviewer. It keeps comments, decisions, and files out of email without sharing the source workspace.
 
-The builder runs entirely in the browser. It exports a standards-based ZIP containing `index.html`, `print.css`, the original PDF, and attachments. Text drafts stay in local storage; selected files remain only in memory. The complete builder and export are free. A one-time Plus license adds reusable text snapshots and a custom cover note through the Sociobot billing API.
+Try the complete sample at <https://review-pdf-packet.sociobot.in/demo>. The sample includes a PDF, two comments, one decision, a source link, and two attachments. **Reset demo** restores the sample. **Start for real** removes demo data and opens an empty builder. Demo text uses `demo:review-packet:*` storage keys. Normal drafts use `review-packet:*` keys. Selected files stay in memory and are not saved after a refresh.
 
-Live: <https://review-pdf-packet.sociobot.in>
+Review Packet creates a ZIP with `index.html`, `print.css`, your PDF, and attachments. Files stay in this browser.
 
 ## Run locally
 
 Requires Node.js 20 or newer.
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
@@ -24,18 +24,20 @@ npm test
 npm run build
 ```
 
-`npm test` runs unit coverage for safe export generation and the ZIP writer, then Playwright keyboard/mobile/accessibility flows. The exact production build command is `npm run build`; output lands in `dist/` with `dist/index.html` at its root.
+Run every visitor-facing claim from a clean checkout with the commands in [.factory/claims.json](.factory/claims.json). The production build writes `dist/index.html`.
 
 ## Deploy
 
-Deploy the contents of `dist/` to Azure Static Web Apps. `public/staticwebapp.config.json` supplies security and cache headers. Product registration, checkout configuration, DNS, and billing are factory concerns and are intentionally not managed here.
+Deploy `dist/` to Azure Static Web Apps. `public/staticwebapp.config.json` provides routing, security headers, and cache policy. The factory manages deployment and DNS.
 
 ## Product notes
 
-- Scope and evidence: [.factory/brief.json](.factory/brief.json)
-- Visual system and image provenance: [.factory/design.md](.factory/design.md)
-- Verification and known gaps: [.factory/handoff.md](.factory/handoff.md)
-- Privacy and terms are available at `/privacy/` and `/terms/`.
+- Scope: [.factory/brief.json](.factory/brief.json)
+- Visual system and asset provenance: [.factory/design.md](.factory/design.md)
+- Demo contract: [.factory/demo.md](.factory/demo.md)
+- Claims and tests: [.factory/claims.json](.factory/claims.json)
+- Privacy: [/privacy/](/privacy/)
+- Terms: [/terms/](/terms/)
 
 ## License
 

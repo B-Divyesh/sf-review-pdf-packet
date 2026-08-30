@@ -52,4 +52,5 @@ Negative list: legible text, logos, people, hands, devices, photorealistic offic
 ## Provenance
 
 - `public/review-packet-diorama.webp`: generated for this product with Azure OpenAI image generation (`factory-image`) on 2026-08-28 from the art-direction prompt above; original generated asset. Reviewed for text artefacts, unintended symbols, seams, brands, and misleading UI. Optimised locally to WebP.
+- `public/review-packet-social.webp` and `public/apple-touch-icon.png`: hand-cropped derivatives of the reviewed diorama on 2026-08-30. They preserve the same original asset and provide the required 1200 × 630 social preview and 180 × 180 touch icon.
 - Interface marks and exported packet visuals: hand-authored CSS/SVG by the builder, 2026-08-28, released with the project under MIT.

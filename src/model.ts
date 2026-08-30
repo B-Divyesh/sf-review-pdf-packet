@@ -35,17 +35,30 @@ export function packetSlug(title: string): string {
   return clean || 'review-packet';
 }
 
-const DRAFT_KEY = 'review-packet:draft:v1';
-const SNAPSHOT_KEY = 'review-packet:snapshots:v1';
+const NORMAL_PREFIX = 'review-packet:';
+const DEMO_PREFIX = 'demo:review-packet:';
+
+export function isDemoMode(): boolean {
+  const url = new URL(window.location.href);
+  return url.pathname === '/demo' || url.searchParams.get('demo') === '1';
+}
+
+function storagePrefix(): string { return isDemoMode() ? DEMO_PREFIX : NORMAL_PREFIX; }
+function draftKey(): string { return `${storagePrefix()}draft:v1`; }
+function snapshotKey(): string { return `${storagePrefix()}snapshots:v1`; }
+
+export function clearDemoStorage(): void {
+  for (const key of Object.keys(localStorage)) if (key.startsWith(DEMO_PREFIX)) localStorage.removeItem(key);
+}
 
 export function saveDraft(state: PacketTextState): void {
-  try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); }
+  try { localStorage.setItem(draftKey(), JSON.stringify(state)); }
   catch { /* The builder remains usable when storage is blocked or full. */ }
 }
 
 export function loadDraft(): PacketTextState {
   try {
-    const raw = localStorage.getItem(DRAFT_KEY);
+    const raw = localStorage.getItem(draftKey());
     if (!raw) return structuredClone(EMPTY_STATE);
     const parsed = JSON.parse(raw) as Partial<PacketTextState>;
     return {
@@ -63,12 +76,12 @@ export function loadDraft(): PacketTextState {
 export interface Snapshot { id: string; name: string; savedAt: string; state: PacketTextState }
 
 export function getSnapshots(): Snapshot[] {
-  try { return JSON.parse(localStorage.getItem(SNAPSHOT_KEY) ?? '[]') as Snapshot[]; }
+  try { return JSON.parse(localStorage.getItem(snapshotKey()) ?? '[]') as Snapshot[]; }
   catch { return []; }
 }
 
 export function saveSnapshot(name: string, state: PacketTextState): Snapshot {
   const snapshot = { id: makeId(), name, savedAt: new Date().toISOString(), state: structuredClone(state) };
-  localStorage.setItem(SNAPSHOT_KEY, JSON.stringify([snapshot, ...getSnapshots()]));
+  localStorage.setItem(snapshotKey(), JSON.stringify([snapshot, ...getSnapshots()]));
   return snapshot;
 }
