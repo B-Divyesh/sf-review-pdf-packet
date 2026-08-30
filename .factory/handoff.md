@@ -21,6 +21,7 @@
 - Current checkout: `npm test`, `npm run build`, and `npm audit --omit=dev` passed. Production JS is 19.69 kB raw / 7.52 kB gzip; CSS is 17.56 kB raw / 4.97 kB gzip.
 - `verify-url.sh` passed locally and live for `/`, `/demo`, `/privacy/`, and `/terms/`: correct title, language, one H1, main landmark, alt text, labels, and no console/page errors.
 - Playwright axe scan has zero violations on the populated demo. Mobile 390 px browser check reports zero horizontal overflow. Reduced-motion and keyboard/focus baseline remain in the stylesheet and browser suite.
+- Live Lighthouse 12.8.2 mobile report: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1.2 s, CLS 0, TBT 0 ms. The installed Chromium exited with a tab-crash message after the complete JSON report was written; the reported audit values are intact at `/tmp/review-packet-lighthouse-12.json`.
 - Cold live browser check: `/demo` had the sample banner, PDF, 3 context items, 2 attachments, only demo storage, zero console errors, and Reset/Start for real cleared demo keys. `?demo=1` also opened the demo. Demo title, canonical, Open Graph, and Twitter title all resolve to “Demo — Review Packet”. Unknown live URLs return the designed 404 document with HTTP 404.
 - Evidence screenshots: `.factory/evidence/live-root-390.png`, `.factory/evidence/live-demo-390.png`, `.factory/evidence/live-404-390.png`.
 
