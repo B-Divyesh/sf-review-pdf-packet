@@ -1,3 +1,35 @@
+# Handoff — polish round 2 (accepted repair)
+
+## Delivered
+
+- Repaired every finding in `review-1.md`, `review-2.md`, and `polish-1.md`; the complete finding-to-evidence map is in [polish-2.md](polish-2.md).
+- The one-click `/demo` path is isolated from real drafts, truthful about demo storage, and shows its seeded PDF, located comment, and attachment count above the fold at 390 px.
+- Browser Back now restores root-H1 focus and announces the home route. Demo itself has a single route H1, focused on arrival. The designed 404 uses the same Try sample → Builder → Privacy header as every other route.
+- Completed the claims registry and observable tests for demo isolation/lifecycle, local processing, text persistence, the 50 MiB PDF limit, export, offline demo, source links, and cover order.
+- Standardised product copy on **attachments**, replaced the vague demo exit action with **Open empty builder**, and removed the unsupported export-failure safety assurance.
+
+## Commits and deployment
+
+- Repair commits: `d6e5c6ae88c02010f88fdd428bbb6ef040974a94`, `0b1c02cb0fc27ae509eb98afcfdcc26b4cb4a351`, and `d7dbf4953cef4f0db4537e8bdcf6f5be5ae75ba0` on `origin/main`.
+- Static deployment completed with `/opt/fleet/lib/deploy-static.sh review-pdf-packet /work/repo/dist`; Azure deployment id `ac7b92a3-08c4-43ae-a65a-13df8af63fe9` succeeded.
+- Live URL: <https://review-pdf-packet.sociobot.in>.
+
+## Verification
+
+- Exact clean checkout: `/tmp/review-pdf-packet-release-HsDxu1`; `npm ci` completed with zero vulnerabilities.
+- Every command declared in `.factory/claims.json` passed from that checkout: demo isolation, demo contents, local processing, text drafts, PDF size limit, packet export, offline demo, source links, and cover order.
+- `npm test` passed: 6 Vitest tests and 22 Playwright tests, with two intentional project-specific skips. `npm run build` passed and generated `dist/`. `npm audit --omit=dev` and `git diff --check` passed.
+- Production build sizes: 20.85 kB JavaScript / 7.79 kB gzip and 18.82 kB CSS / 5.18 kB gzip.
+- `verify-url.sh` passed locally and live for root/demo, and live for Privacy/Terms. The live checks confirm titles, language, one H1, main landmark, image alt text, button names, and no root/demo console or page errors. Playwright's integrated axe scan found zero violations.
+- Final cold mobile live check: `/demo` rendered one focused H1, the seeded `northstar-launch-review.pdf`, `Page 3, pricing table`, two attachments, no horizontal overflow, and the corrected banner. Back restored focus to `#hero-title` and announced the root route. `/not-a-real-page` returned HTTP 404 with Try sample, Builder, and Privacy links.
+- Evidence: [.factory/evidence/polish-2-live-demo-390.png](evidence/polish-2-live-demo-390.png), [.factory/evidence/polish-2-final-live-demo/verify.json](evidence/polish-2-final-live-demo/verify.json), and [.factory/evidence/polish-2-local-demo/verify.json](evidence/polish-2-local-demo/verify.json).
+
+## Known gaps
+
+None.
+
+---
+
 # Handoff — adversarial review 2
 
 ## Review result
