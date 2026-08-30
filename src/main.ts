@@ -98,6 +98,11 @@ form.addEventListener('submit', async (event) => { event.preventDefault(); expor
 function updateOnlineState(): void { offlineBanner.hidden = navigator.onLine; }
 window.addEventListener('online', () => { offlineBanner.hidden = true; }); window.addEventListener('offline', () => { offlineBanner.hidden = false; }); updateOnlineState();
 if (demo) {
+  const rootTitle = byId('hero-title');
+  const demoRouteTitle = document.createElement('h2');
+  for (const attribute of rootTitle.attributes) demoRouteTitle.setAttribute(attribute.name, attribute.value);
+  demoRouteTitle.textContent = rootTitle.textContent;
+  rootTitle.replaceWith(demoRouteTitle);
   byId('demo-banner').hidden = false;
   byId('demo-first-preview').hidden = false;
   document.title = 'Demo — Review Packet';
