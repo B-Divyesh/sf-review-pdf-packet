@@ -1,5 +1,5 @@
-const CACHE = 'review-packet-v6';
-const SHELL = ['/', '/demo', '/404.html', '/review-packet-diorama.webp', '/review-packet-social.webp', '/favicon.svg', '/apple-touch-icon.png', '/legal.css', '/privacy/', '/terms/'];
+const CACHE = 'review-packet-__BUILD_SHA__';
+const SHELL = ['/', '/demo', '/404.html', '/review-packet-diorama.webp', '/review-packet-social.webp', '/favicon.svg', '/apple-touch-icon.png', '/legal.css', '/route-focus.js', '/privacy/', '/terms/'];
 self.addEventListener('install', (event) => event.waitUntil((async () => {
   const cache = await caches.open(CACHE);
   await cache.addAll(SHELL);

@@ -4,7 +4,7 @@ Review Packet packages a PDF with review context and attachments. It is for peop
 
 Try the complete sample at <https://review-pdf-packet.sociobot.in/demo>. It includes a PDF, two comments, one decision, a source link, and two attachments. **Reset demo** restores the sample. **Open empty builder** removes demo data and opens an empty builder. Demo text uses `demo:review-packet:*` storage keys. Normal drafts use `review-packet:*` keys. Selected files stay in memory and are not saved after a refresh.
 
-Review Packet creates a ZIP with `index.html`, `print.css`, your PDF, and attachments. Files stay in this browser.
+Review Packet creates a ZIP with `index.html`, `print.css`, your PDF, and attachments. Attachments can total up to 75 MB. Files stay in this browser.
 
 ## Run locally
 

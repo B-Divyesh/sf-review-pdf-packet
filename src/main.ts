@@ -61,7 +61,7 @@ function updatePreview(): void {
   setText('preview-byline', state.preparedBy.trim() ? `Prepared by ${state.preparedBy.trim()}` : 'Prepared for external review');
   setText('preview-pdf', state.pdf?.name ?? 'Not added');
   setText('preview-context', `${state.context.length} item${state.context.length === 1 ? '' : 's'}`);
-  setText('preview-attachments', `${state.attachments.length} file${state.attachments.length === 1 ? '' : 's'}`);
+  setText('preview-attachments', `${state.attachments.length} attachment${state.attachments.length === 1 ? '' : 's'}`);
 }
 function makeRemoveButton(label: string, action: () => void): HTMLButtonElement { const button = document.createElement('button'); button.type = 'button'; button.className = 'icon-button'; button.setAttribute('aria-label', label); button.textContent = 'Remove'; button.addEventListener('click', action); return button; }
 function showUndo(message: string): void { window.clearTimeout(toastTimer); setText('toast-text', message); byId('toast').hidden = false; toastTimer = window.setTimeout(() => { byId('toast').hidden = true; removed = null; }, 6000); }
@@ -88,7 +88,7 @@ function restoreDemoFiles(): void { const sample = sampleFiles(); state.pdf = sa
 titleInput.value = state.title; preparedInput.value = state.preparedBy;
 for (const input of [titleInput, preparedInput]) input.addEventListener('input', () => { state.title = titleInput.value; state.preparedBy = preparedInput.value; titleInput.removeAttribute('aria-invalid'); exportError.textContent = ''; updatePreview(); persist(); });
 pdfInput.addEventListener('change', () => { void acceptPdf(pdfInput.files?.[0]); });
-attachmentInput.addEventListener('change', () => { const incoming = [...(attachmentInput.files ?? [])]; const total = [...state.attachments, ...incoming].reduce((sum, file) => sum + file.size, 0); if (total > 75 * 1024 * 1024) { announce('Attachments would exceed 75 MB in total. Remove a file or choose smaller files.'); return; } state.attachments.push(...incoming); attachmentInput.value = ''; renderAttachments(); updatePreview(); if (incoming.length) announce(`${incoming.length} attachment${incoming.length === 1 ? '' : 's'} added.`); });
+attachmentInput.addEventListener('change', () => { const incoming = [...(attachmentInput.files ?? [])]; const total = [...state.attachments, ...incoming].reduce((sum, file) => sum + file.size, 0); if (total > 75 * 1024 * 1024) { attachmentInput.value = ''; announce('Attachments would exceed 75 MB in total. Remove an attachment or choose smaller attachments.'); return; } state.attachments.push(...incoming); attachmentInput.value = ''; renderAttachments(); updatePreview(); if (incoming.length) announce(`${incoming.length} attachment${incoming.length === 1 ? '' : 's'} added.`); });
 const drop = byId('pdf-drop'); for (const eventName of ['dragenter', 'dragover']) drop.addEventListener(eventName, (event) => { event.preventDefault(); drop.classList.add('dragging'); }); for (const eventName of ['dragleave', 'drop']) drop.addEventListener(eventName, (event) => { event.preventDefault(); drop.classList.remove('dragging'); }); drop.addEventListener('drop', (event) => { void acceptPdf((event as DragEvent).dataTransfer?.files[0]); });
 byId('add-context').addEventListener('click', () => { const text = contextText.value.trim(); if (!text) { contextText.setAttribute('aria-invalid', 'true'); contextError.textContent = 'Write the comment or decision first.'; contextText.focus(); return; } state.context.push({ id: makeId(), kind: contextKind.value as ContextItem['kind'], location: contextLocation.value.trim(), text }); contextText.value = ''; contextLocation.value = ''; contextText.removeAttribute('aria-invalid'); contextError.textContent = ''; renderContext(); updatePreview(); persist(); announce('Review context added to the packet.'); contextText.focus(); });
 contextText.addEventListener('input', () => { contextText.removeAttribute('aria-invalid'); contextError.textContent = ''; });
@@ -111,25 +111,15 @@ if (demo) {
   byId('demo-banner').hidden = false;
   byId('demo-first-preview').hidden = false;
   document.title = 'Demo — Review Packet';
+  document.body.dataset.routeAnnouncement = 'Demo route loaded.';
   document.querySelector('link[rel="canonical"]')?.setAttribute('href', 'https://review-pdf-packet.sociobot.in/demo');
-  for (const [selector, value] of [['meta[property="og:title"]', 'Demo — Review Packet'], ['meta[property="og:description"]', 'Inspect a complete sample PDF review packet and reset it at any time.'], ['meta[name="twitter:title"]', 'Demo — Review Packet'], ['meta[name="twitter:description"]', 'Inspect a complete sample PDF review packet and reset it at any time.']] as const) document.querySelector(selector)?.setAttribute('content', value);
-  byId('route-announcer').textContent = 'Demo route loaded.';
+  for (const [selector, value] of [['meta[name="description"]', 'Inspect a complete sample PDF review packet and reset it at any time.'], ['meta[property="og:title"]', 'Demo — Review Packet'], ['meta[property="og:description"]', 'Inspect a complete sample PDF review packet and reset it at any time.'], ['meta[name="twitter:title"]', 'Demo — Review Packet'], ['meta[name="twitter:description"]', 'Inspect a complete sample PDF review packet and reset it at any time.']] as const) document.querySelector(selector)?.setAttribute('content', value);
   if (savedDemoDraft?.title) restoreDemoFiles(); else seedDemo();
-  requestAnimationFrame(() => byId('demo-preview-title').focus());
   byId('reset-demo').addEventListener('click', () => { clearDemoStorage(); seedDemo(); });
   byId('start-real').addEventListener('click', () => clearDemoStorage());
 } else {
   renderPdf(); renderContext(); renderAttachments(); renderLinks(); updatePreview();
-  const restoreHomeFocus = (): void => {
-    sessionStorage.removeItem('review-packet:return-focus');
-    byId('route-announcer').textContent = 'Review Packet home loaded.';
-    requestAnimationFrame(() => byId('hero-title').focus());
-  };
-  if (sessionStorage.getItem('review-packet:return-focus') === '1') restoreHomeFocus();
-  window.addEventListener('pagehide', () => sessionStorage.setItem('review-packet:return-focus', '1'));
-  window.addEventListener('pageshow', (event) => {
-    if (!event.persisted) return;
-    restoreHomeFocus();
-  });
 }
+delete document.body.dataset.routePending;
+document.dispatchEvent(new Event('review-packet:route-ready'));
 if ('serviceWorker' in navigator && import.meta.env.PROD) window.addEventListener('load', () => void navigator.serviceWorker.register('/sw.js'));
