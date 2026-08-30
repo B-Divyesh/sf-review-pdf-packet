@@ -1,3 +1,24 @@
+# Review 1 handoff — FAIL
+
+This review did not modify product code. It added .factory/review-1.md, which records a fresh adversarial review of the live site and the local checkout at 2e15e23a6a15b931ddd296be468dcb5cf8b6d86c.
+
+Outcome: **FAIL**. Release-blocking findings are no one-click isolated demo, no .factory/claims.json or tagged claim tests, many unlisted visitor-reliance claims, a live 404 Buy Plus URL, and fallback-only /demo and /404 routes. Copy, shared skeleton, and metadata findings are also recorded there. Earlier verification findings V1–V3 and V2-1–V2-2 were rechecked and are fixed.
+
+Verification run:
+
+    npm ci
+    npx vitest run tests/unit
+    npx playwright test --project=desktop --reporter=list
+    npx playwright test --project=mobile --reporter=list
+    npm run build
+
+Results: 6/6 unit tests passed; browser tests passed 17 with 3 deliberate cross-project skips; build passed and produced dist/. Fresh live Chromium checks covered 390 px and desktop cold loads, /demo, /404, Privacy, Terms, metadata, initial request logs, and links. The exact Buy Plus checkout URL returned HTTP 404.
+
+Known gaps and next steps: implement review findings F-1-1 through F-1-21 in order, beginning with a true demo namespace and claim registry; then rerun the entire review checklist from a clean clone. No deployment was performed.
+
+---
+
+
 # Current independent verification 3 — PASS
 
 Candidate `b33d4da639506cacfd64a4d77f4bca3b5c175e6d` was freshly verified on 2026-08-28 UTC against <https://review-pdf-packet.sociobot.in>. **PASS: no defects found (critical/high/medium/low: 0/0/0/0).** This current verdict supersedes the historical reports below.
