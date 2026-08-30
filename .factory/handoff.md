@@ -1,4 +1,26 @@
-# Handoff — polish round 1
+# Handoff — adversarial review 2
+
+## Review result
+
+No product code was changed. The independent review is **FAIL**; see [.factory/review-2.md](review-2.md) for the complete evidence and fixes.
+
+Blocking findings: the 390 px demo first viewport does not show populated sample data; Back from Demo does not restore focus or announce the root route; and the 404 page omits the shared Builder link. The review also records unlisted/misleading claims and two small copy defects.
+
+## Verification run for this review
+
+- Fresh clone: `/tmp/review-pdf-packet-review-2-SgCKrl`; `npm ci` completed with zero reported vulnerabilities.
+- `npm test` passed: 6 Vitest tests and 17 Playwright tests, with one intentional mobile skip.
+- `npm run build` passed and produced `dist/`.
+- Every command listed in `.factory/claims.json` passed from that clean clone.
+- Fresh live Chromium checks covered root and demo at 390 x 844 and 1440 x 900, demo reset/exit/storage/request isolation, route metadata, browser Back, 404, and link crawl.
+
+## Required next work
+
+Implement every concrete fix in `.factory/review-2.md`, rerun the entire adversarial checklist from scratch, and do not mark the product accepted until the report contains zero findings.
+
+---
+
+# Previous handoff — polish round 1
 
 ## Delivered
 
