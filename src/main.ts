@@ -103,6 +103,11 @@ if (demo) {
   for (const attribute of rootTitle.attributes) demoRouteTitle.setAttribute(attribute.name, attribute.value);
   demoRouteTitle.textContent = rootTitle.textContent;
   rootTitle.replaceWith(demoRouteTitle);
+  const previewTitle = byId('demo-preview-title');
+  const demoHeading = document.createElement('h1');
+  for (const attribute of previewTitle.attributes) demoHeading.setAttribute(attribute.name, attribute.value);
+  demoHeading.textContent = previewTitle.textContent;
+  previewTitle.replaceWith(demoHeading);
   byId('demo-banner').hidden = false;
   byId('demo-first-preview').hidden = false;
   document.title = 'Demo — Review Packet';
