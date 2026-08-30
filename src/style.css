@@ -56,6 +56,16 @@ h1 em { color: var(--coral); font-weight: inherit; }
 .demo-banner span { color: var(--muted); }
 .demo-banner div { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .demo-banner button, .demo-banner a { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 8px 12px; border: 1px solid var(--forest); color: var(--forest-dark); background: var(--sheet); font-weight: 750; text-decoration: none; cursor: pointer; }
+.demo-first-preview { width: min(1180px, calc(100% - 40px)); margin: 22px auto 0; padding: 20px 24px 24px; background: var(--sheet); border-left: 7px solid var(--coral); box-shadow: var(--shadow); }
+.demo-first-preview .eyebrow { margin-bottom: 10px; }
+.demo-first-preview h2 { margin: 18px 0 6px; font-size: clamp(1.8rem, 4vw, 2.5rem); }
+.demo-first-preview > p:last-child { margin: 0; color: var(--muted); }
+.demo-first-sheet { display: grid; grid-template-columns: 1.2fr 1.6fr 1fr; gap: 0; background: #eef4f0; border: 1px solid #b5c9bd; }
+.demo-first-sheet > div { min-height: 88px; padding: 14px 16px; border-right: 1px solid #b5c9bd; }
+.demo-first-sheet > div:last-child { border-right: 0; }
+.demo-first-sheet strong, .demo-first-sheet span { display: block; overflow-wrap: anywhere; }
+.demo-first-sheet span { margin-top: 3px; color: var(--muted); font-size: 14px; }
+.demo-file-label { margin: 0 0 4px; color: var(--forest); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--forest); border-radius: 2px; padding: 10px 18px; font-weight: 750; text-decoration: none; cursor: pointer; transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease; }
 .button:hover { transform: translateY(-2px); }
 .button:active { transform: translateY(0); }
@@ -220,6 +230,11 @@ footer small { color: var(--muted); font-size: 13px; }
   .action-outcome { max-width: 290px; }
   .demo-banner { width: calc(100% - 28px); margin-top: 12px; align-items: flex-start; }
   .demo-banner div { margin-left: 0; width: 100%; }
+  .demo-first-preview { width: calc(100% - 28px); margin-top: 14px; padding: 16px; }
+  .demo-first-preview h2 { margin-top: 16px; }
+  .demo-first-sheet { grid-template-columns: 1fr; }
+  .demo-first-sheet > div { min-height: auto; padding: 10px 12px; border-right: 0; border-bottom: 1px solid #b5c9bd; }
+  .demo-first-sheet > div:last-child { border-bottom: 0; }
   .hero-art { width: 100%; }
   .paper-label { left: -6px; }
   .hero-art figcaption { right: -4px; font-size: 14px; }

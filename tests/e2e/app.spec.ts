@@ -1,5 +1,8 @@
 import { expect, test } from '@playwright/test';
 import axe from 'axe-core';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 async function openDemo(page: import('@playwright/test').Page): Promise<void> {
   await page.goto('/demo');
@@ -25,6 +28,24 @@ test('@claim:demo-isolation keeps samples in an isolated namespace and resets th
   await page.getByRole('button', { name: 'Reset demo' }).click();
   await expect(page.locator('#context-list')).toContainText('annual pricing');
   expect(await page.evaluate(() => localStorage.getItem('review-packet:draft:v1'))).toContain('Real draft');
+  await expect(page.locator('#demo-banner')).toContainText('saved separately from your real drafts');
+});
+
+test('@claim:demo-contents seeds the documented packet, resets it, and opens an empty builder', async ({ page }) => {
+  await openDemo(page);
+  await expect(page.locator('#pdf-list')).toContainText('northstar-launch-review.pdf');
+  await expect(page.locator('#context-list')).toContainText('annual pricing');
+  await expect(page.locator('#context-list')).toContainText('Approved');
+  await expect(page.locator('#links-list input').first()).toHaveValue('Authorised launch brief');
+  await expect(page.locator('#attachment-list')).toContainText('launch-review-checklist.txt');
+  await expect(page.locator('#attachment-list')).toContainText('launch-timeline.txt');
+  await page.locator('#packet-title').fill('Changed title');
+  await page.getByRole('button', { name: 'Reset demo' }).click();
+  await expect(page.locator('#packet-title')).toHaveValue('Northstar launch review');
+  await page.getByRole('link', { name: 'Open empty builder' }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.locator('#packet-title')).toHaveValue('');
+  expect(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.startsWith('demo:review-packet:')))).toEqual([]);
 });
 
 test('@claim:local-processing @claim:text-drafts makes no cross-origin request and does not save selected files', async ({ page }) => {
@@ -41,6 +62,24 @@ test('@claim:local-processing @claim:text-drafts makes no cross-origin request a
   await expect(page.locator('#packet-title')).toHaveValue('Changed demo title');
   await expect(page.locator('#attachment-list')).not.toContainText('private-note.txt');
   await expect(page.locator('#attachment-list')).toContainText('launch-review-checklist.txt');
+});
+
+test('@claim:pdf-size-limit accepts a 50 MiB PDF and rejects one additional byte', async ({ page }) => {
+  const directory = await mkdtemp(join(tmpdir(), 'review-packet-size-'));
+  const withinLimit = join(directory, 'within-limit.pdf');
+  const overLimit = join(directory, 'over-limit.pdf');
+  try {
+    await writeFile(withinLimit, Buffer.concat([Buffer.from('%PDF-1.4\n'), Buffer.alloc(50 * 1024 * 1024 - 9)]));
+    await writeFile(overLimit, Buffer.concat([Buffer.from('%PDF-1.4\n'), Buffer.alloc(50 * 1024 * 1024 - 8)]));
+    await page.goto('/');
+    await page.locator('#pdf-input').setInputFiles(withinLimit);
+    await expect(page.locator('#pdf-list')).toContainText('within-limit.pdf');
+    await page.locator('#pdf-input').setInputFiles(overLimit);
+    await expect(page.locator('#status')).toContainText('larger than 50 MB');
+    await expect(page.locator('#pdf-list')).toContainText('within-limit.pdf');
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test('@claim:packet-export exports the seeded PDF, context, link, stylesheet, and attachments', async ({ page }) => {
@@ -92,17 +131,29 @@ test('@claim:cover-order puts the cover before review sections in the exported p
   expect(content).toContain('Open northstar-launch-review.pdf');
 });
 
-test('uses plain first-screen copy, real demo title, route focus, and reset/start actions', async ({ page }) => {
+test('uses plain first-screen copy and restores focus and route feedback after browser Back', async ({ page }) => {
   await page.goto('/');
   await expect(page).toHaveTitle('Review Packet — build PDF review packets');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Package a PDF for external review');
   await page.getByRole('link', { name: 'Try it with sample data' }).click();
   await expect(page).toHaveURL(/\/demo$/);
   await expect(page).toHaveTitle('Demo — Review Packet');
-  await expect(page.locator('#hero-title')).toBeFocused();
-  await page.getByRole('link', { name: 'Start for real' }).click();
+  await expect(page.locator('#demo-preview-title')).toBeFocused();
+  await page.goBack();
   await expect(page).toHaveURL(/\/$/);
-  expect(await page.evaluate(() => Object.keys(localStorage).filter((key) => key.startsWith('demo:review-packet:')))).toEqual([]);
+  await expect(page.locator('#hero-title')).toBeFocused();
+  await expect(page.locator('#route-announcer')).toHaveText('Review Packet home loaded.');
+});
+
+test('shows the populated demo packet in the first 390 px viewport', async ({ page }, testInfo) => {
+  test.skip(!testInfo.project.name.includes('mobile'));
+  await openDemo(page);
+  const firstViewport = await page.locator('#demo-first-preview').boundingBox();
+  expect(firstViewport).not.toBeNull();
+  expect(firstViewport!.y).toBeLessThan(844);
+  await expect(page.locator('#demo-first-preview')).toContainText('northstar-launch-review.pdf');
+  await expect(page.locator('#demo-first-preview')).toContainText('Page 3, pricing table');
+  await expect(page.locator('#demo-first-preview')).toContainText('2 files included');
 });
 
 test('has complete metadata, shared skeleton, a designed 404 route, and no accessibility violations', async ({ page }) => {
@@ -115,6 +166,7 @@ test('has complete metadata, shared skeleton, a designed 404 route, and no acces
     await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);
     await expect(page.getByRole('link', { name: /Privacy/ }).first()).toBeVisible();
     await expect(page.getByRole('link', { name: /Terms/ }).first()).toBeVisible();
+    await expect(page.locator('header nav a')).toHaveText(['Try sample', 'Builder', 'Privacy']);
   }
   await page.goto('/demo'); await page.addScriptTag({ content: axe.source });
   const results = await page.evaluate(async () => (window as typeof window & { axe: typeof axe }).axe.run());

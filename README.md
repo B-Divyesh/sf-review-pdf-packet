@@ -1,8 +1,8 @@
 # Review Packet
 
-Review Packet packages a PDF with review context and supporting files. It is for people sending a reviewed document to an external reviewer. It keeps comments, decisions, and files out of email without sharing the source workspace.
+Review Packet packages a PDF with review context and attachments. It is for people sending a reviewed document to an external reviewer. It keeps comments, decisions, and attachments out of email without sharing the source workspace.
 
-Try the complete sample at <https://review-pdf-packet.sociobot.in/demo>. The sample includes a PDF, two comments, one decision, a source link, and two attachments. **Reset demo** restores the sample. **Start for real** removes demo data and opens an empty builder. Demo text uses `demo:review-packet:*` storage keys. Normal drafts use `review-packet:*` keys. Selected files stay in memory and are not saved after a refresh.
+Try the complete sample at <https://review-pdf-packet.sociobot.in/demo>. It includes a PDF, two comments, one decision, a source link, and two attachments. **Reset demo** restores the sample. **Open empty builder** removes demo data and opens an empty builder. Demo text uses `demo:review-packet:*` storage keys. Normal drafts use `review-packet:*` keys. Selected files stay in memory and are not saved after a refresh.
 
 Review Packet creates a ZIP with `index.html`, `print.css`, your PDF, and attachments. Files stay in this browser.
 
