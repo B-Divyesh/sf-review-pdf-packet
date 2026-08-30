@@ -1,6 +1,6 @@
 # Polish round 1
 
-Candidate `2e15e23a6a15b931ddd296be468dcb5cf8b6d86c` was repaired in commits `f37d8d2`, `77e5bdc`, and `a1cb6ef`. Screenshots are from a cold live Chromium visit at 390 px: `/.factory/evidence/live-root-390.png`, `/.factory/evidence/live-demo-390.png`, and `/.factory/evidence/live-404-390.png`.
+Candidate `2e15e23a6a15b931ddd296be468dcb5cf8b6d86c` was repaired in commits `f37d8d2`, `77e5bdc`, `a1cb6ef`, and `d048868`. Screenshots are from a cold live Chromium visit at 390 px: `/.factory/evidence/live-root-390.png`, `/.factory/evidence/live-demo-390.png`, and `/.factory/evidence/live-404-390.png`.
 
 | Finding | Change made | Evidence |
 | --- | --- | --- |

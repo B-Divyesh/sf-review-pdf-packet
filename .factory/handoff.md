@@ -10,7 +10,7 @@
 
 ## Commits and deployment
 
-- Repair commits: `f37d8d23d974250f8f6324bfce4f1cdd6a8b5e0a`, `77e5bdc`, `a1cb6ef` on `origin/main`.
+- Repair commits: `f37d8d23d974250f8f6324bfce4f1cdd6a8b5e0a`, `77e5bdc`, `a1cb6ef`, and `d048868` on `origin/main`.
 - Azure Static Web Apps deployment completed through `/opt/fleet/lib/deploy-static.sh review-pdf-packet /work/repo/dist`.
 - Live URL: <https://review-pdf-packet.sociobot.in>.
 
@@ -21,7 +21,7 @@
 - Current checkout: `npm test`, `npm run build`, and `npm audit --omit=dev` passed. Production JS is 19.69 kB raw / 7.52 kB gzip; CSS is 17.56 kB raw / 4.97 kB gzip.
 - `verify-url.sh` passed locally and live for `/`, `/demo`, `/privacy/`, and `/terms/`: correct title, language, one H1, main landmark, alt text, labels, and no console/page errors.
 - Playwright axe scan has zero violations on the populated demo. Mobile 390 px browser check reports zero horizontal overflow. Reduced-motion and keyboard/focus baseline remain in the stylesheet and browser suite.
-- Cold live browser check: `/demo` had the sample banner, PDF, 3 context items, 2 attachments, only demo storage, zero console errors, and Reset/Start for real cleared demo keys. `?demo=1` also opened the demo. Unknown live URLs return the designed 404 document with HTTP 404.
+- Cold live browser check: `/demo` had the sample banner, PDF, 3 context items, 2 attachments, only demo storage, zero console errors, and Reset/Start for real cleared demo keys. `?demo=1` also opened the demo. Demo title, canonical, Open Graph, and Twitter title all resolve to “Demo — Review Packet”. Unknown live URLs return the designed 404 document with HTTP 404.
 - Evidence screenshots: `.factory/evidence/live-root-390.png`, `.factory/evidence/live-demo-390.png`, `.factory/evidence/live-404-390.png`.
 
 ## Known gaps
