@@ -1,0 +1,14 @@
+{
+  "url": "https://review-pdf-packet.sociobot.in/privacy/?cold=deb9b8354acf",
+  "loadMs": 628,
+  "errors": [],
+  "a11y": {
+    "title": "Privacy — Review Packet",
+    "lang": "en",
+    "h1": 1,
+    "main": true,
+    "imgsMissingAlt": 0,
+    "buttonsUnlabeled": 0,
+    "textLength": 1002
+  }
+}

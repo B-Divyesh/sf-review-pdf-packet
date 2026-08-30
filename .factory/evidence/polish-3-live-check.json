@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-08-30T05:38:41.732Z",
+  "liveUrl": "https://review-pdf-packet.sociobot.in",
+  "build": "deb9b8354acf",
+  "findings": {
+    "F-3-1": "Demo standard description, title, H1, focus, and announcement passed.",
+    "F-3-2": "Attachment terminology passed live copy scan.",
+    "F-3-4": "Exact live sample counts passed before and after Reset demo.",
+    "F-3-5": "75 MiB succeeded; one additional byte failed without removing the accepted attachment.",
+    "F-3-3": "Privacy, Terms, home history, and live 404 focused H1 and announced routes.",
+    "F-3-6": "Root, Demo, Privacy, Terms, and 404 showed Build deb9b8354acf."
+  },
+  "earlierDemo": "One-click first viewport, isolation, reset, same-origin requests, and ZIP export passed.",
+  "offlineDemo": "Populated Demo reloaded offline in its own browser context."
+}

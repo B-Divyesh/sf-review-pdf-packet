@@ -1,0 +1,35 @@
+{
+  "checkedAt": "2026-08-30T05:39:27.340Z",
+  "results": [
+    {
+      "route": "/",
+      "status": 200,
+      "violations": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "/demo",
+      "status": 200,
+      "violations": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "/privacy/",
+      "status": 200,
+      "violations": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "/terms/",
+      "status": 200,
+      "violations": [],
+      "consoleErrors": []
+    },
+    {
+      "route": "/not-a-real-page-polish-3",
+      "status": 404,
+      "violations": [],
+      "consoleErrors": []
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+HTTP/2 200 
+content-type: text/html
+date: Sun, 30 Aug 2026 05:39:08 GMT
+cache-control: public, must-revalidate, max-age=30
+etag: "84915653"
+last-modified: Sun, 30 Aug 2026 05:36:44 GMT
+content-length: 10323
+strict-transport-security: max-age=10886400; includeSubDomains; preload
+referrer-policy: strict-origin-when-cross-origin
+x-content-type-options: nosniff
+x-xss-protection: 1; mode=block
+x-dns-prefetch-control: off
+permissions-policy: camera=(), microphone=(), geolocation=()
+content-security-policy: default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+

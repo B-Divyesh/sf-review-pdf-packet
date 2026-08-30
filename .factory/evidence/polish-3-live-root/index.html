@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f0e2" />
+    <meta name="description" content="Build a PDF review packet with comments, decisions, links, and attachments for an external reviewer." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Review Packet — build PDF review packets" />
+    <meta property="og:description" content="Build a PDF review packet with comments, decisions, links, and attachments." />
+    <meta property="og:image" content="https://review-pdf-packet.sociobot.in/review-packet-social.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Review Packet — build PDF review packets" />
+    <meta name="twitter:description" content="Build a PDF review packet with comments, decisions, links, and attachments." />
+    <meta name="twitter:image" content="https://review-pdf-packet.sociobot.in/review-packet-social.webp" />
+    <link rel="canonical" href="https://review-pdf-packet.sociobot.in/" />
+    <title>Review Packet — build PDF review packets</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <script type="module" crossorigin src="/assets/index-CEOQaUzx.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-8K8InjMQ.css">
+  </head>
+  <body data-route-announcement="Review Packet home loaded." data-route-pending="true">
+    <a class="skip-link" href="#main">Skip to packet builder</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Review Packet home">
+        <svg aria-hidden="true" viewBox="0 0 40 40"><path d="M8 5h19l5 5v25H8z"/><path d="M27 5v6h5M13 17h14M13 23h14M13 29h9"/></svg>
+        <span>Review Packet</span>
+      </a>
+      <nav aria-label="Primary navigation"><a href="/demo">Try sample</a><a href="#builder">Builder</a><a href="/privacy/">Privacy</a></nav>
+    </header>
+    <div class="demo-banner" id="demo-banner" role="status" aria-live="polite" hidden><strong>Demo — sample data; saved separately from your real drafts.</strong><span>Explore the sample packet, reset it, or open an empty builder.</span><div><button id="reset-demo" type="button">Reset demo</button><a href="/" id="start-real">Open empty builder</a></div></div>
+    <section class="demo-first-preview" id="demo-first-preview" aria-labelledby="demo-preview-title" hidden>
+      <p class="eyebrow">Sample packet</p>
+      <div class="demo-first-sheet">
+        <div><p class="demo-file-label">Reviewed PDF</p><strong>northstar-launch-review.pdf</strong></div>
+        <div><p class="demo-file-label">Review context</p><strong>Comment · Page 3, pricing table</strong><span>Please confirm annual pricing.</span></div>
+        <div><p class="demo-file-label">Attachments</p><strong>2 attachments included</strong></div>
+      </div>
+      <h2 id="demo-preview-title" tabindex="-1">Inspect a sample review packet</h2>
+      <p>Review the PDF, comments, decision, link, and attachments below.</p>
+    </section>
+    <div class="route-announcer" id="route-announcer" aria-live="polite"></div>
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Review Packet</p>
+          <h1 id="hero-title" tabindex="-1">Package a PDF for external review</h1>
+          <p class="lede">For people sending a reviewed PDF, add comments, decisions, links, and attachments for the external reviewer.</p>
+          <div class="hero-actions"><a class="button primary" href="/demo" id="try-demo">Try it with sample data</a><span class="action-outcome">Open a complete sample packet you can inspect and reset.</span></div>
+          <ul class="hero-facts" aria-label="Review Packet facts"><li>Files stay in this browser.</li><li>Exports a folder with the PDF, context, links, and attachments.</li><li>Sample data is saved separately from your real drafts.</li></ul>
+        </div>
+        <figure class="hero-art"><span class="paper-label">PDF + context</span><img src="/review-packet-diorama.webp" width="1200" height="800" alt="Layered paper folder holding a document, decision card and attachments, with a folded arrow carrying the packet outward" fetchpriority="high" decoding="async" /><figcaption>A PDF, review context, and attachments travel together.</figcaption></figure>
+      </section>
+      <section class="how-it-works" aria-labelledby="how-title"><h2 id="how-title" class="sr-only">How to build a review packet</h2><ol><li><span>01</span><strong>Add the reviewed PDF</strong><small>Choose the document to share.</small></li><li><span>02</span><strong>Add review context</strong><small>Record comments, decisions, links, and attachments.</small></li><li><span>03</span><strong>Download the packet</strong><small>Share the exported folder with your reviewer.</small></li></ol></section>
+      <section class="builder-shell" id="builder" aria-labelledby="builder-title">
+        <div class="section-heading"><div><p class="eyebrow">Packet builder</p><h2 id="builder-title">Build a review packet</h2></div><p>Text drafts stay on this device. Selected files are not saved after a refresh.</p></div>
+        <div class="offline-banner" id="offline-banner" role="status" hidden><strong>You’re offline.</strong> The sample remains available after its first load while offline.</div><div class="status-message" id="status" role="status" aria-live="polite"></div>
+        <div class="workbench"><form class="builder-form" id="packet-form" novalidate>
+          <fieldset class="paper-section" id="document-step"><legend><span>1</span> Document</legend><div class="field-grid two-col"><label>Packet title (required)<input id="packet-title" name="packet-title" autocomplete="off" required maxlength="100" aria-describedby="title-help" /><small id="title-help">This is the first title your reviewer sees.</small></label><label>Prepared by<input id="prepared-by" name="prepared-by" autocomplete="name" maxlength="80" /></label></div><label class="drop-zone" id="pdf-drop" for="pdf-input"><span class="drop-icon" aria-hidden="true">PDF</span><span><strong>Choose the reviewed PDF</strong><small>or drop it here · PDF only · up to 50 MB</small></span><input id="pdf-input" type="file" accept="application/pdf,.pdf" /></label><div class="file-list" id="pdf-list" aria-live="polite"></div></fieldset>
+          <fieldset class="paper-section" id="context-step"><legend><span>2</span> Review context</legend><p class="fieldset-intro">Add the details an external reviewer needs beside the PDF.</p><div class="context-form"><label>Type<select id="context-kind"><option value="comment">Comment</option><option value="decision">Decision</option></select></label><label>Page or section<input id="context-location" maxlength="60" placeholder="e.g. Page 4, pricing table" /></label><label class="full">Context (required)<textarea id="context-text" rows="3" maxlength="600" placeholder="What should the reviewer know?" aria-describedby="context-error"></textarea><small class="field-error" id="context-error"></small></label><button class="button secondary full-width" id="add-context" type="button">Add review context</button></div><div class="empty-card" id="context-empty"><span aria-hidden="true">✦</span><p><strong>No review context yet</strong><br />Add the notes your reviewer needs to act.</p></div><ol class="context-list" id="context-list"></ol><div class="subsection"><div class="subsection-heading"><div><h3>Source links</h3><p>Source links are included without copying their content.</p></div><button class="button quiet" id="add-link" type="button">Add source link</button></div><div id="links-list" class="structured-list"></div></div><div class="subsection"><div class="subsection-heading"><div><h3>Attachments</h3><p>Attachments can total up to 75 MB.</p></div><label class="button quiet file-button">Add attachments<input id="attachment-input" type="file" multiple /></label></div><div id="attachment-list" class="file-list"></div></div></fieldset>
+          <fieldset class="paper-section export-section" id="export-step"><legend><span>3</span> Export</legend><div class="export-explainer"><div class="zip-mark" aria-hidden="true"><i></i><b>ZIP</b></div><div><h3>Download a review packet</h3><p>Exports a folder with the PDF, context, links, and attachments.</p></div></div><label class="check-row"><input id="sensitive-check" type="checkbox" /> <span>I checked the recipients and removed sensitive material they should not receive.</span></label><p class="safety-note">Check every recipient before sharing the exported folder.</p><button class="button primary export-button" id="export-button" type="submit">Download review packet</button><p class="field-error" id="export-error" role="alert"></p></fieldset>
+        </form><section class="packet-preview" aria-labelledby="preview-title"><div class="preview-sticky"><p class="eyebrow">Packet preview</p><div class="preview-stack"><div class="preview-back"></div><div class="preview-sheet"><span class="preview-kicker">Review packet</span><h2 id="preview-title">Untitled packet</h2><p id="preview-byline">Prepared for external review</p><dl><div><dt>PDF</dt><dd id="preview-pdf">Not added</dd></div><div><dt>Context</dt><dd id="preview-context">0 items</dd></div><div><dt>Attachments</dt><dd id="preview-attachments">0 attachments</dd></div></dl><div class="preview-tabs" aria-hidden="true"><span></span><span></span><span></span></div></div></div><p class="preview-caption">The exported packet starts with this cover.</p></div></section></div>
+      </section>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden><span id="toast-text"></span><button id="undo-button" type="button">Undo</button></div>
+    <footer><a class="brand footer-brand" href="/">Review Packet</a><p>Local PDF review packets for external reviewers.</p><nav aria-label="Footer"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><span>Built by Param Factory</span></nav><small>Build deb9b8354acf</small></footer>
+    <script src="/route-focus.js"></script>
+  </body>
+</html>
